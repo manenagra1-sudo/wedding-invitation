@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wedding Invitation</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Noto+Sans+Gurmukhi:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--burg:#5c0f1f;--burg2:#7a1a2e;--ivory:#fbf5e6;--gold:#c9a24b;--gold2:#e6c97a;--ink:#3a1018;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;font-size:19px;line-height:1.5}
+.script{font-family:'Great Vibes','Brush Script MT',cursive;font-weight:400}
+.kicker{letter-spacing:.35em;text-transform:uppercase;font-size:.8rem;color:var(--gold2)}
+
+/* ===== COVER + ENVELOPE ===== */
+#cover{position:fixed;inset:0;z-index:10;overflow:hidden;background:radial-gradient(circle at 50% 30%,var(--burg2),var(--burg) 70%);color:var(--ivory);transition:opacity 1s,visibility 1s}
+#cover.out{opacity:0;visibility:hidden;pointer-events:none}
+#cover::before{content:"";position:absolute;inset:14px;border:1px solid var(--gold);pointer-events:none}
+#cover::after{content:"";position:absolute;inset:20px;border:1px solid rgba(201,162,75,.4);pointer-events:none}
+.cc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;transition:opacity .7s,transform .7s}
+#cover.go .cc{opacity:0;transform:scale(.94);pointer-events:none}
+.photo{width:min(50vw,220px);aspect-ratio:1;border-radius:50%;border:3px solid var(--gold);padding:7px;background:var(--burg)}
+.photo>div{width:100%;height:100%;border-radius:50%;background:linear-gradient(160deg,#8d2a3f,#4a0a18);display:flex;align-items:center;justify-content:center;text-align:center;font-size:.85rem;color:var(--gold2);padding:14px;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover}
+.names{font-size:clamp(2.6rem,10vw,4.4rem);line-height:1.05;margin:0;color:var(--gold2)}
+.names span{display:block;font-size:.5em;color:var(--ivory)}
+.btn{margin-top:6px;padding:14px 38px;font:600 1rem 'Cormorant Garamond',Georgia,serif;letter-spacing:.25em;text-transform:uppercase;color:var(--burg);background:linear-gradient(135deg,var(--gold2),var(--gold));border:0;border-radius:2px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.btn:hover{filter:brightness(1.08)}
+.pulse{animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(230,201,122,.55)}70%{box-shadow:0 0 0 16px rgba(230,201,122,0)}100%{box-shadow:0 0 0 0 rgba(230,201,122,0)}}
+
+.stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;perspective:1200px;transition:opacity .8s .3s}
+#cover.go .stage{opacity:1;visibility:visible}
+.env{position:relative;width:min(86vw,400px);aspect-ratio:3/2;margin-top:12vh;transform:translateY(40px) scale(.9);transition:transform 1s .3s cubic-bezier(.2,.8,.2,1)}
+#cover.go .env{transform:translateY(0) scale(1)}
+.eb{position:absolute;inset:0;background:#3f0a16;border:1px solid var(--gold);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.front,.flap{position:absolute;inset:0}
+.front{z-index:3;background:linear-gradient(180deg,#8a2236,#6b1427);clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%)}
+.flap{z-index:4;background:linear-gradient(180deg,#9a2a40,#7a1a2e);clip-path:polygon(0 0,100% 0,50% 55%);transform-origin:50% 0;transition:transform .9s ease-in-out,z-index 0s .45s;backface-visibility:visible}
+.env.open .flap{transform:rotateX(180deg);z-index:1}
+.edge{position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(to bottom right,transparent calc(50% - .5px),rgba(201,162,75,.7) 50%,transparent calc(50% + .5px)) top left/50% 55% no-repeat,linear-gradient(to bottom left,transparent calc(50% - .5px),rgba(201,162,75,.7) 50%,transparent calc(50% + .5px)) top right/50% 55% no-repeat}
+.seal{position:absolute;z-index:6;left:50%;top:55%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--gold2),var(--gold) 60%,#8a6a22);color:var(--burg);display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 3px 8px rgba(0,0,0,.5);transition:opacity .4s,transform .4s}
+.env.open .seal{opacity:0;transform:scale(.4)}
+.letter{position:absolute;z-index:2;left:5%;width:90%;bottom:4%;height:88%;background:var(--ivory);color:var(--burg);border:1px solid var(--gold);outline:1px solid rgba(201,162,75,.5);outline-offset:-6px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;transition:transform 1.2s cubic-bezier(.3,.7,.2,1),opacity .8s}
+.env.rise .letter{transform:translateY(-62%)}
+.env.zoom .letter{transform:translateY(-62%) scale(1.5);opacity:0}
+.letter .k{letter-spacing:.3em;text-transform:uppercase;font-size:.7rem;color:var(--gold)}
+.letter .n{font-size:clamp(1.8rem,7vw,2.6rem);line-height:1.1;margin:4px 0}
+.letter .dt{font-size:.95rem}
+
+/* ===== INVITATION ===== */
+main{display:none}
+main.show{display:block;animation:fade 1.2s}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1}}
+section{max-width:900px;margin:0 auto;padding:56px 22px;text-align:center}
+.orn{color:var(--gold);letter-spacing:.6em;font-size:1.1rem}
+.hero{background:var(--burg);color:var(--ivory);max-width:none;padding:70px 22px}
+.hero .inner{max-width:640px;margin:0 auto;border:1px solid var(--gold);padding:44px 24px;outline:1px solid rgba(201,162,75,.4);outline-offset:6px}
+.hero h1{font-size:clamp(2.6rem,9vw,4.2rem);margin:12px 0;color:var(--gold2)}
+.hero p{margin:10px 0}
+.ik{font-size:1.5rem;color:var(--gold2);margin:0}
+h2{font-size:clamp(2.2rem,8vw,3rem);margin:0;color:var(--burg)}
+.rule{width:90px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:12px auto 26px}
+.alt{background:#f4ead2;max-width:none}
+.alt>.w{max-width:900px;margin:0 auto}
+.cd{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.cd div{min-width:78px;padding:14px 8px;background:var(--burg);color:var(--ivory);border:1px solid var(--gold);border-radius:3px}
+.cd b{display:block;font-size:2.1rem;line-height:1;color:var(--gold2)}
+.cd small{letter-spacing:.2em;text-transform:uppercase;font-size:.7rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{background:#fffaf0;border:1px solid var(--gold);padding:28px 20px;position:relative;box-shadow:0 4px 14px rgba(92,15,31,.08)}
+.card::before{content:"";position:absolute;inset:6px;border:1px solid rgba(201,162,75,.45);pointer-events:none}
+.card h3{margin:0;font-size:2.2rem;color:var(--burg)}
+.pa{color:var(--gold);font-size:1.15rem;margin-bottom:6px}
+.card p{margin:4px 0}.when{font-weight:600}
+.par{--parbg:var(--burg);background:var(--parbg);max-width:none;padding:64px 22px;color:var(--ivory)}
+.gur{font-family:'Noto Sans Gurmukhi','Gurmukhi MN','Raavi',sans-serif}
+.pcard .ik{color:var(--gold2);font-size:1.9rem;margin:6px 0 4px;line-height:1.3}
+.pcard .verse{color:var(--ivory);font-size:1.15rem;line-height:1.8;max-width:520px;margin:6px auto 14px;font-weight:600}
+.pcard{max-width:680px;margin:0 auto;border:1px solid var(--gold);outline:1px solid rgba(201,162,75,.45);outline-offset:-8px;padding:44px 24px;background:transparent;color:var(--ivory)}
+.pcard .bl{font-size:1.9rem;color:var(--gold2);margin:8px 0}
+.pp{margin:14px 0 6px}.pp span{display:block;font-size:1.4rem;font-weight:600;color:var(--gold2);line-height:1.4}
+.pcard .rq{font-style:italic;margin:12px auto;max-width:460px}
+.pcard .pn{font-size:clamp(2.4rem,8vw,3.4rem);color:var(--gold2);margin:2px 0;line-height:1.2}
+.pcard .sm span{display:block;margin:2px 0}
+.pcard .sm{font-size:.98rem;font-style:italic;max-width:500px;margin:4px auto 6px}
+.pdate{font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:.95rem;color:var(--gold2);margin:22px 0 10px}
+.map{display:inline-block;margin-top:14px;padding:8px 20px;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:var(--burg);border:1px solid var(--burg);position:relative;z-index:1}
+.map:hover{background:var(--burg);color:var(--gold2)}
+.story{max-width:620px;margin:0 auto;text-align:left;border-left:2px solid var(--gold);padding-left:22px}
+.story div{position:relative;margin-bottom:26px}
+.story div::before{content:"";position:absolute;left:-30px;top:8px;width:14px;height:14px;border-radius:50%;background:var(--burg);border:2px solid var(--gold)}
+.story h4{margin:0;color:var(--burg);font-size:1.3rem}.story h4 small{color:var(--gold);font-weight:400;font-size:.95rem;margin-left:6px}
+.story p{margin:4px 0 0}
+.dress h3{font-size:1.9rem}.dress .sw{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.dress .sw i{width:20px;height:20px;border-radius:50%;border:1px solid var(--gold)}
+.rsvp{max-width:520px;margin:0 auto;text-align:left;background:#fffaf0;border:1px solid var(--gold);padding:26px 22px;outline:1px solid rgba(201,162,75,.45);outline-offset:-7px}
+.rsvp label{display:block;margin:12px 0 4px;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--burg)}
+.rsvp input,.rsvp select,.rsvp textarea{width:100%;padding:10px 12px;font:inherit;border:1px solid var(--gold);background:#fff;color:var(--ink);border-radius:2px}
+.checks{display:flex;flex-wrap:wrap;gap:6px 16px}.checks label{display:flex;align-items:center;gap:6px;margin:4px 0;letter-spacing:0;text-transform:none;font-size:1rem}
+.checks input{width:auto}
+.rbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.rbtns .btn{flex:1;min-width:160px;margin:0;padding:12px 10px;font-size:.85rem}
+.rbtns .btn.sec{background:var(--burg);color:var(--gold2)}
+.mapsec{background:var(--burg);color:var(--ivory);max-width:none}
+.mapsec .w{max-width:900px;margin:0 auto}
+.mapsec h2{color:var(--gold2)}
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:22px}
+.tab{padding:8px 18px;font:600 .85rem 'Cormorant Garamond',Georgia,serif;letter-spacing:.15em;text-transform:uppercase;background:transparent;color:var(--gold2);border:1px solid var(--gold);cursor:pointer}
+.tab.on{background:var(--gold);color:var(--burg)}
+.mp{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;align-items:stretch;text-align:left}
+.mv{position:relative;border:1px solid var(--gold);min-height:260px;background:#3f0a16;overflow:hidden}
+.mv svg,.mv iframe{width:100%;height:100%;min-height:260px;display:block;border:0}
+.mi{display:flex;flex-direction:column;justify-content:center}
+.mi h3{margin:0;font-size:2.3rem;color:var(--gold2)}
+.mi p{margin:4px 0}
+.mb{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.mb a,.mb button{padding:9px 16px;font:600 .8rem 'Cormorant Garamond',Georgia,serif;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;cursor:pointer;color:var(--burg);background:linear-gradient(135deg,var(--gold2),var(--gold));border:0}
+.mb button{background:transparent;color:var(--gold2);border:1px solid var(--gold)}
+@media(max-width:700px){.mp{grid-template-columns:1fr}}
+button.map{font-family:inherit;background:transparent;cursor:pointer;margin-left:6px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--burg);color:var(--gold2);border:1px solid var(--gold);padding:10px 22px;opacity:0;pointer-events:none;transition:.3s;z-index:50}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.rsvp .ok{text-align:center;padding:20px 0}
+.btn:disabled{opacity:.6;cursor:wait}
+footer{background:var(--burg);color:var(--gold2);text-align:center;padding:36px 20px}
+@media(max-width:480px){body{font-size:18px}.cd div{min-width:68px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important;transition-delay:0s!important}}
+</style>
+</head>
+<body>
+
+<div id="cover">
+  <div class="cc">
+    <div class="kicker">Together with their families</div>
+    <div class="photo"><div id="photoBox">Couple’s photo<br>goes here</div></div>
+    <h1 class="names script" id="coverNames"></h1>
+    <div class="kicker">are getting married</div>
+    <button class="btn pulse" id="openBtn">Open Invitation</button>
+  </div>
+  <div class="stage">
+    <div class="env" id="env">
+      <div class="eb"></div>
+      <div class="letter"><div class="k">You are invited</div><div class="n script" id="letterNames"></div><div class="dt" id="letterDate"></div></div>
+      <div class="front"></div>
+      <div class="flap"></div>
+      <div class="edge"></div>
+      <div class="seal script" id="seal"></div>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+  <section class="par">
+    <div class="pcard">
+      <div class="orn">✦ ✦ ✦</div>
+      <p class="ik gur" id="pOnkar"></p>
+      <p class="verse gur" id="pVerse"></p>
+      <p class="bl script" id="pBless"></p>
+      <div class="pp" id="pPar"></div>
+      <p class="rq" id="pReq"></p>
+      <p class="pn script" id="pGroom"></p>
+      <p class="sm" id="pGroomExtra"></p>
+      <p class="rq">with</p>
+      <p class="pn script" id="pBride"></p>
+      <p class="sm" id="pBrideExtra"></p>
+      <p class="pdate" id="pDate"></p>
+      <div class="orn">✦ ✦ ✦</div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="script">Counting down to the big day</h2><div class="rule"></div>
+    <div class="cd">
+      <div><b id="d">0</b><small>Days</small></div><div><b id="h">0</b><small>Hours</small></div>
+      <div><b id="m">0</b><small>Minutes</small></div><div><b id="s">0</b><small>Seconds</small></div>
+    </div>
+  </section>
+
+  <section class="alt"><div class="w">
+    <h2 class="script">Wedding Celebrations</h2><div class="rule"></div>
+    <div class="grid" id="events"></div>
+  </div></section>
+
+  <section>
+    <h2 class="script">Dress Code</h2><div class="rule"></div>
+    <p style="margin:-10px 0 24px">Wear any colours you love.</p>
+    <div class="grid dress" id="dress"></div>
+  </section>
+
+  <section class="mapsec" id="map"><div class="w">
+    <h2 class="script">Find Us</h2><div class="rule"></div>
+    <div class="tabs" id="mtabs"></div>
+    <div class="mp"><div class="mv" id="mview"></div><div class="mi" id="minfo"></div></div>
+  </div></section>
+
+  <section>
+    <h2 class="script">RSVP</h2><div class="rule"></div>
+    <p id="rsvpBy" style="margin-top:-10px"></p>
+    <div class="rsvp">
+      <label for="rn">Your name</label><input id="rn" autocomplete="name">
+      <label for="rg">Number of guests</label>
+      <select id="rg"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select>
+      <label for="ra">Will you attend?</label>
+      <select id="ra"><option>Joyfully accept</option><option>Regretfully decline</option></select>
+      <label>Events you’ll join</label><div class="checks" id="rev"></div>
+      <label for="rm">Message for the couple</label><textarea id="rm" rows="3"></textarea>
+      <div class="rbtns"><button class="btn" id="rs">Submit RSVP</button></div>
+      <p id="rmsg" role="status" style="text-align:center;margin:14px 0 0;min-height:1.4em"></p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="script" style="font-size:2.2rem" id="footNames"></div>
+    <p style="margin:6px 0 0;color:var(--ivory)">We can’t wait to celebrate with you.</p>
+    <div class="mb" style="justify-content:center;margin-top:18px"><button id="share">Share invitation</button><button id="replay">Replay envelope</button><button id="top">Back to top</button></div>
+  </footer>
+</main>
+
+<div id="toast" role="status"></div>
+
+<script>
+/* ===================== EDIT THESE DETAILS ===================== */
+const WEDDING = {
+  bride: "Taranpreet Kaur Aujla", groom: "Jaspreet Singh Nagra",
+  photo: "images/photo.png",              // path to your photo (placeholder shows if it can't load)
+  weddingDate: "2027-02-19T10:00:00",     // Anand Karaj date/time
+  rsvpBy: "2027-05-01",                   // RSVP deadline
+  sheetUrl: "https://script.google.com/macros/s/AKfycbwwAinavimYrf3EhVsN2Ett6zt3_NkFQEdITj76xeceM_13oauzGhS4Zl1GzF11H7xc/exec",  // Google Apps Script web app URL
+  liveMap: true                           // true = show the live Google Map by default
+};
+const PARENTS = {
+  onkar: "ੴ",                             // "" to hide
+  verse: "ਸਤਿਗੁਰ ਦਾਤੇ ਕਾਰਜੁ ਰਚੈ ਆਪਣੀ ਮਿਹਰ ਕਰਾਈ ॥ ਦਸਾਂ ਕਾਰਜੁ ਆਪਿ ਸਵਾਰੇ ਉਸ ਦੀ ਵਡਿਆਈ ॥",
+  blessing: "",                                   // optional top line, e.g. "With the blessings of Waheguru"
+  groomParents: ["Sardar Surjit Singh Nagra &", "Sardarni Sukhraj Kaur Nagra"],
+  request: "request the honour of your presence at the Wedding Ceremony of their beloved son",
+  groomExtra: ["(Grand S/o Sardar Chain Singh Nagra & Sardarni Gurdev Kaur Nagra)", "(Late Sardar Avtar Singh Sidhu & Sardarni Dalbir Kaur Sidhu.)"],   // each item = one line, [] to hide
+  brideExtra: "(D/o Sardar Harjit Singh Aujla & Sardarni Jaswinder Kaur Aujla)"
+};
+const EVENTS = [
+  {name:"Maiyan / Haldi", pa:"ਮਾਈਆਂ / ਹਲਦੀ", date:"2027-02-15T11:00:00", venue:"Our Home",    address:"Ayya, Punjab 144625, India", coords:"31.239881, 75.373768"},
+  {name:"Kand Path Sahib",          pa:"ਕੰਦ ਪਾਠ ਸਾਹਿਬ",          date:"2027-02-15T10:00:00", venue:"Our Home",    address:"Ayya, Punjab 144625, India", coords:"31.239881, 75.373768"},
+  {name:"Jaggo",          pa:"ਜਾਗੋ",          date:"2027-02-17T18:00:00", venue:"Our Home",    address:"Ayya, Punjab 144625, India", coords:"31.239881, 75.373768"},
+  {name:"Anand Karaj",    pa:"ਆਨੰਦ ਕਾਰਜ",     date:"2027-02-19T10:00:00", venue:"Gurdwara name", address:"789 Example Road, Calgary, AB"},
+  {name:"Reception",      pa:"ਰਿਸੈਪਸ਼ਨ",      date:"2027-02-19",            venue:"Ravi Resort",   address:"Hazara, Punjab 144025, India"}
+];
+const DRESS = [
+  {name:"Maiyan / Haldi", text:"Any colour you like. Something comfortable that you don't mind getting a little messy."},
+  {name:"Pooja",          text:"Any colour you like, in traditional and modest attire."},
+  {name:"Jaggo",          text:"Any colour you like. Festive wear and your dancing shoes."},
+  {name:"Anand Karaj",    text:"Any colour you like, in traditional and modest attire. Please cover your head and remove shoes inside the Gurdwara."},
+  {name:"Reception",      text:"Any colour you like. Formal evening wear."}
+];
+/* =============================================================== */
+const $=id=>document.getElementById(id);
+const {bride,groom}=WEDDING;
+const fmtD=d=>d.toLocaleDateString(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+const fmtT=d=>d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+const wd=new Date(WEDDING.weddingDate);
+const hasT=e=>e.date.includes("T");                                   // events with no time show the date only
+const mapQ=e=>encodeURIComponent((e.coords||"").trim()||(e.venue+" "+e.address));   // coordinates win over venue/address for map links
+const loc=e=>[e.venue,e.address].filter(Boolean).join(", ");
+const evDate=e=>new Date(hasT(e)?e.date:e.date+"T00:00:00");
+$("coverNames").innerHTML=`${groom} <span>&amp;</span> ${bride}`;
+["letterNames","footNames"].forEach(i=>$(i).textContent=`${groom} & ${bride}`);
+$("letterDate").textContent=fmtD(wd);
+const setT=(id,v)=>{const e=$(id);e.textContent=v;e.style.display=v?"":"none"};
+const setLines=(id,v)=>{const a=[].concat(v||[]).filter(Boolean),e=$(id);e.replaceChildren(...a.map(l=>{const s=document.createElement("span");s.textContent=l;return s}));e.style.display=a.length?"":"none"};
+const ord=n=>{const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])};
+setT("pOnkar",PARENTS.onkar);setT("pVerse",PARENTS.verse);setT("pBless",PARENTS.blessing);setT("pReq",PARENTS.request);setT("pGroom",groom);setT("pBride",bride);
+setLines("pGroomExtra",PARENTS.groomExtra);setLines("pBrideExtra",PARENTS.brideExtra);
+$("pPar").replaceChildren(...PARENTS.groomParents.map(l=>{const s=document.createElement("span");s.textContent=l;return s}));
+setT("pDate","On "+wd.toLocaleDateString("en-US",{weekday:"long"})+", "+wd.toLocaleDateString("en-US",{month:"long"})+" "+ord(wd.getDate())+", "+wd.getFullYear());
+$("seal").textContent=(groom[0]||"")+(bride[0]||"");
+$("rsvpBy").textContent="Kindly reply by "+new Date(WEDDING.rsvpBy+"T12:00:00").toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"});
+if(WEDDING.photo){const im=new Image();im.alt="";im.onload=()=>{$("photoBox").innerHTML="";$("photoBox").appendChild(im)};im.src=WEDDING.photo}
+$("events").innerHTML=EVENTS.map((e,i)=>{const d=evDate(e);
+  const u="https://www.google.com/maps/search/?api=1&query="+mapQ(e);
+  return `<article class="card"><div class="pa">${e.pa}</div><h3 class="script">${e.name}</h3><p class="when">${fmtD(d)}</p>${hasT(e)?`<p>${fmtT(d)}</p>`:""}<p style="margin-top:10px"><b>${e.venue}</b></p>${e.address?`<p>${e.address}</p>`:""}<a class="map" href="${u}" target="_blank" rel="noopener">View Map</a> <button class="map" data-cal="${i}">Add to Calendar</button></article>`}).join("");
+$("dress").innerHTML=DRESS.map(x=>`<article class="card"><h3 class="script">${x.name}</h3><p>${x.text}</p></article>`).join("");
+$("rev").innerHTML=EVENTS.map((e,i)=>`<label><input type="checkbox" value="${e.name}" checked> ${e.name}</label>`).join("");
+
+/* envelope animation */
+$("openBtn").onclick=()=>{
+  const c=$("cover"),env=$("env");
+  c.classList.add("go");
+  setTimeout(()=>env.classList.add("open"),900);
+  setTimeout(()=>env.classList.add("rise"),2500);
+  setTimeout(()=>env.classList.add("zoom"),3500);
+  setTimeout(()=>{c.classList.add("out");$("main").classList.add("show");window.scrollTo(0,0)},4300);
+};
+
+/* map */
+const PIN=`<svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Venue location marker"><rect width="400" height="260" fill="#3f0a16"/><path d="M-10 190C80 150 140 210 230 170S350 120 410 140" stroke="#6b1427" stroke-width="26" fill="none"/><g stroke="rgba(201,162,75,.28)" stroke-width="2" fill="none"><path d="M0 70H400M0 130H400M0 220H400M60 0V260M150 0V260M260 0V260M340 0V260"/><path d="M0 20L400 240" stroke-width="4"/></g><circle cx="200" cy="112" r="34" fill="none" stroke="#e6c97a" stroke-width="2"><animate attributeName="r" values="14;44" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="2s" repeatCount="indefinite"/></circle><path d="M200 150C178 120 168 106 168 94a32 32 0 0 1 64 0c0 12-10 26-32 56z" fill="#c9a24b" stroke="#fbf5e6" stroke-width="2"/><circle cx="200" cy="94" r="11" fill="#5c0f1f"/></svg>`;
+let mi=0,live=!!WEDDING.liveMap;
+function drawMap(){
+  const e=EVENTS[mi],d=evDate(e),q=mapQ(e);
+  $("mtabs").innerHTML=EVENTS.map((x,i)=>`<button class="tab${i===mi?" on":""}" data-i="${i}">${x.name}</button>`).join("");
+  $("mview").innerHTML=live?`<iframe title="Map of ${e.venue}" loading="lazy" src="https://www.google.com/maps?q=${q}&output=embed"></iframe>`:PIN;
+  $("minfo").innerHTML=`<div class="pa" style="color:var(--gold)">${e.pa}</div><h3 class="script">${e.name}</h3><p>${fmtD(d)}${hasT(e)?", "+fmtT(d):""}</p><p><b>${e.venue}</b></p>${e.address?`<p>${e.address}</p>`:""}<div class="mb"><a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">Open in Maps</a><a href="https://www.google.com/maps/dir/?api=1&destination=${q}" target="_blank" rel="noopener">Directions</a><button id="mlive">${live?"Hide live map":"Show live map"}</button><button id="mcopy">Copy address</button><button data-cal="${mi}">Add to calendar</button></div>`;
+}
+$("map").addEventListener("click",ev=>{
+  const t=ev.target.closest("[data-i],#mlive,#mcopy");if(!t)return;
+  if(t.id==="mcopy"){copyText(EVENTS[mi].coords||loc(EVENTS[mi]));return}
+  if(t.id==="mlive")live=!live;else mi=+t.dataset.i;
+  drawMap();
+});
+drawMap();
+
+/* RSVP */
+function rsvpText(){
+  const ev=[...document.querySelectorAll("#rev input:checked")].map(i=>i.value).join(", ")||"none selected";
+  return `RSVP for ${groom} & ${bride}'s wedding\nName: ${$("rn").value||"(not given)"}\nGuests: ${$("rg").value}\nResponse: ${$("ra").value}\nEvents: ${ev}\nMessage: ${$("rm").value||"-"}`;
+}
+function toast(m){const e=$("toast");e.textContent=m;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),2400)}
+function copyText(x){
+  const ok=()=>toast("Copied!");
+  function fb(){const a=document.createElement("textarea");a.value=x;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){toast("Couldn't copy")}a.remove()}
+  if(navigator.clipboard)navigator.clipboard.writeText(x).then(ok,fb);else fb();
+}
+function setMsg(m,bad){const e=$("rmsg");e.textContent=m;e.style.color=bad?"#a3202f":"var(--burg)"}
+function rsvpOK(){if(!$("rn").value.trim()){setMsg("Please enter your name first.",1);$("rn").focus();return false}setMsg("");return true}
+$("rs").onclick=async()=>{
+  if(!rsvpOK())return;
+  if(!WEDDING.sheetUrl){setMsg("RSVP isn't set up yet.",1);return}
+  const b=$("rs");b.disabled=true;setMsg("Sending…");
+  const ev=[...document.querySelectorAll("#rev input:checked")].map(i=>i.value).join(", ");
+  try{
+    await fetch(WEDDING.sheetUrl,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify({name:$("rn").value.trim(),guests:$("rg").value,response:$("ra").value,events:ev,message:$("rm").value})});
+    const yes=$("ra").selectedIndex===0;
+    document.querySelector(".rsvp").innerHTML=`<div class="ok"><div class="script" style="font-size:2.4rem;color:var(--burg)">Thank you!</div><p>${yes?"Your RSVP has been received. We can't wait to celebrate with you.":"Your reply has been received. You will be missed."}</p></div>`;
+  }catch(err){b.disabled=false;setMsg("Something went wrong. Please try again.",1)}
+};
+
+/* add to calendar (.ics) */
+function ics(i){
+  const e=EVENTS[i],s=evDate(e),en=new Date(s.getTime()+3*36e5);
+  const allDay=!hasT(e),ymd=d=>d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+  const f=d=>d.toISOString().replace(/[-:]/g,"").replace(/\.\d+Z$/,"Z");
+  const esc=x=>x.replace(/[,;]/g,m=>"\\"+m);
+  const txt=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Wedding//EN","BEGIN:VEVENT","UID:"+Date.now()+"-"+i+"@wedding","DTSTAMP:"+f(new Date()),allDay?"DTSTART;VALUE=DATE:"+ymd(s):"DTSTART:"+f(s),allDay?"DTEND;VALUE=DATE:"+ymd(new Date(s.getFullYear(),s.getMonth(),s.getDate()+1)):"DTEND:"+f(en),"SUMMARY:"+esc(e.name+" - "+groom+" & "+bride),"LOCATION:"+esc(loc(e)),"END:VEVENT","END:VCALENDAR"].join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/calendar"}));a.download=e.name.replace(/\s+/g,"-")+".ics";
+  document.body.appendChild(a);a.click();a.remove();toast("Calendar file downloaded");
+}
+document.addEventListener("click",ev=>{const c=ev.target.closest("[data-cal]");if(c)ics(+c.dataset.cal)});
+
+/* footer buttons */
+$("top").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
+$("share").onclick=()=>{const u=location.href,t=`${groom} & ${bride} - Wedding Invitation`;
+  if(navigator.share)navigator.share({title:t,url:u}).catch(()=>{});else copyText(u)};
+$("replay").onclick=()=>{
+  $("env").className="env";$("main").classList.remove("show");
+  $("cover").classList.remove("go","out");window.scrollTo(0,0)};
+
+/* countdown */
+const target=wd.getTime();
+function tick(){const s=Math.floor(Math.max(0,target-Date.now())/1000);
+  $("d").textContent=Math.floor(s/86400);$("h").textContent=Math.floor(s%86400/3600);
+  $("m").textContent=Math.floor(s%3600/60);$("s").textContent=s%60}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
